@@ -1,4 +1,4 @@
-package com.example.MiniProject1.services;
+package com.example.MiniProject1.services.impl;
 
 import com.example.MiniProject1.models.User;
 import com.example.MiniProject1.payload.Request.LoginRequest;

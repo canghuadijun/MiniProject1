@@ -6,13 +6,13 @@ import com.example.MiniProject1.payload.Request.OrderRequest;
 import java.util.List;
 
 public interface IOrderService {
-    public abstract Order createOrder(OrderRequest orderRequest);
+    Order createOrder(OrderRequest orderRequest);
 
-    public abstract Order updateOrder(Long id, OrderRequest orderRequest);
+    Order updateOrder(Long id, OrderRequest orderRequest);
 
-    public abstract boolean deleteOrder(Long id);
+    boolean deleteOrder(Long id);
 
-    public abstract List<Order> getAllOrders();
+    List<Order> getAllOrders();
 
-    public abstract Order getOrderById(Long id);
+    Order getOrderById(Long id);
 }

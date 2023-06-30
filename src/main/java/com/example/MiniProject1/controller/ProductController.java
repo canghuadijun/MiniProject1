@@ -3,7 +3,7 @@ package com.example.MiniProject1.controller;
 import com.example.MiniProject1.models.Product;
 import com.example.MiniProject1.payload.Request.ProductRequest;
 import com.example.MiniProject1.payload.Response.ResponseObject;
-import com.example.MiniProject1.services.ProductService;
+import com.example.MiniProject1.services.impl.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

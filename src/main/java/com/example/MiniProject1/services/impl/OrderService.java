@@ -1,10 +1,11 @@
-package com.example.MiniProject1.services;
+package com.example.MiniProject1.services.impl;
 
 import com.example.MiniProject1.models.Order;
 import com.example.MiniProject1.payload.Request.OrderRequest;
 import com.example.MiniProject1.repositories.OrderRepository;
 import com.example.MiniProject1.repositories.ProductRepository;
 import com.example.MiniProject1.repositories.UserRepository;
+import com.example.MiniProject1.services.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

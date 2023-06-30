@@ -1,8 +1,9 @@
-package com.example.MiniProject1.services;
+package com.example.MiniProject1.services.impl;
 
 import com.example.MiniProject1.models.Product;
 import com.example.MiniProject1.payload.Request.ProductRequest;
 import com.example.MiniProject1.repositories.ProductRepository;
+import com.example.MiniProject1.services.IProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
