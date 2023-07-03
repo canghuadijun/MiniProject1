@@ -14,6 +14,10 @@ public class Customer {
     @JoinColumn(name = "userId")
     private User user;
 
+    public Customer() {
+
+    }
+
     public Customer(Long id, String name, User user) {
         this.id = id;
         this.name = name;
