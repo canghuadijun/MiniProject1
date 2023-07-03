@@ -119,9 +119,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
-    @Autowired CustomUserDetailService userDetailsService;
+    @Autowired
+    CustomUserDetailService userDetailsService;
 
-    @Autowired private AuthEntryPointJwt authEntryPointJwt;
+    @Autowired
+    private AuthEntryPointJwt authEntryPointJwt;
 
     @Bean
     public JwtAuthenticationFilter authenticationJwtTokenFilter() {
@@ -157,10 +159,11 @@ public class WebSecurityConfig {
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         auth ->
-                                auth.antMatchers("/api/**")
-                                        .permitAll()
-                                        .antMatchers("/**")
-                                        .permitAll()
+                                auth.antMatchers("/admin/**").hasRole("ADMIN")
+                                        .antMatchers("/customer/**").hasRole("CUSTOMER")
+                                        .antMatchers("/auth/**").permitAll()
+                                        .antMatchers("/public/products").permitAll()
+                                        .antMatchers("/**").permitAll()
                                         .anyRequest()
                                         .authenticated());
 

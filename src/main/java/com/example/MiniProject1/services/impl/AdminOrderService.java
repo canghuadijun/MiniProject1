@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class OrderService implements IOrderService {
-
+public class AdminOrderService implements IOrderService {
     @Autowired
     private final OrderRepository orderRepository;
 
@@ -23,7 +22,7 @@ public class OrderService implements IOrderService {
     @Autowired
     private final UserRepository userRepository;
 
-    public OrderService(OrderRepository orderRepository, ProductRepository productRepository, UserRepository userRepository) {
+    public AdminOrderService(OrderRepository orderRepository, ProductRepository productRepository, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
@@ -73,4 +72,3 @@ public class OrderService implements IOrderService {
         return false;
     }
 }
-

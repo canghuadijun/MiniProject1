@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -21,26 +20,19 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/admin")
-    public ResponseEntity<?> checkAuthorize() {
-        return ResponseEntity.ok().body("admin");
-    }
-
-
-    @GetMapping
+    @GetMapping("/public/product")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/search")
+    @GetMapping("/public/product/search")
     public ResponseEntity<List<Product>> searchProducts(@RequestParam("keyword") String keyword) {
         List<Product> products = productService.searchProducts(keyword);
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/public/product/get/{id}")
     public ResponseEntity<ResponseObject> getProductById(@PathVariable("id") Long id) {
         Product product = productService.getProductById(id);
         if (product == null) {
@@ -52,7 +44,7 @@ public class ProductController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/create")
+    @PostMapping("/admin/product/create")
     public ResponseEntity<ResponseObject> createProduct(@RequestBody ProductRequest productRequest) {
         Product product = productService.createProduct(productRequest);
         if (product == null) {
@@ -65,7 +57,7 @@ public class ProductController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/update/{id}")
+    @PutMapping("/admin/product/update/{id}")
     public ResponseEntity<ResponseObject> updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequest productRequest) {
         Product product = productService.updateProduct(id, productRequest);
         if (product == null) {
@@ -76,7 +68,7 @@ public class ProductController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/admin/product/delete/{id}")
     public ResponseEntity<ResponseObject> deleteProduct(@PathVariable("id") Long id) {
         boolean deleted = productService.deleteProduct(id);
         if (!deleted) {
