@@ -8,15 +8,15 @@ import java.util.List;
 
 public class OrderRequest {
     private LocalDateTime orderDate;
-    private Product product;
-    private Customer customer;
+    private Long productId;
+    private Long customerId;
 
     // Constructors, getters, and setters
 
-    public OrderRequest(LocalDateTime orderDate, Product product, Customer customer) {
+    public OrderRequest(LocalDateTime orderDate, Long productId, Long customerId) {
         this.orderDate = orderDate;
-        this.product = product;
-        this.customer = customer;
+        this.productId = productId;
+        this.customerId = customerId;
     }
 
     public OrderRequest() {
@@ -30,20 +30,20 @@ public class OrderRequest {
         this.orderDate = orderDate;
     }
 
-    public Product getProduct() {
-        return product;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 }
 

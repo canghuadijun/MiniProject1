@@ -3,31 +3,32 @@ package com.example.MiniProject1.controller;
 import com.example.MiniProject1.models.Order;
 import com.example.MiniProject1.payload.Request.OrderRequest;
 import com.example.MiniProject1.payload.Response.ResponseObject;
-import com.example.MiniProject1.services.impl.AdminOrderService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import com.example.MiniProject1.services.impl.OrderService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/admin/order")
-@PreAuthorize("hasRole('ADMIN')")
 public class AdminOrderController {
-    private final AdminOrderService orderService;
+    private final OrderService orderService;
 
-    public AdminOrderController(AdminOrderService orderService) {
+    public AdminOrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
+    /*
+    Quan ly dich vu cua Admin
+     */
     @GetMapping("/view")
     public ResponseEntity<List<Order>> getAllOrders() {
         List<Order> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<ResponseObject> getOrderById(@PathVariable("id") Long id) {
         Order order = orderService.getOrderById(id);
         if (order == null) {
@@ -50,8 +51,8 @@ public class AdminOrderController {
                 .body(new ResponseObject("ok", "create successfully", order));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateOrder(@PathVariable("id") Long id, @RequestBody OrderRequest orderRequest) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateOrder(@PathVariable("id") Long id, @RequestBody OrderRequest orderRequest) throws Exception {
         Order order = orderService.updateOrder(id, orderRequest);
         if (order == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -63,7 +64,7 @@ public class AdminOrderController {
 
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ResponseObject> deleteOrder(@PathVariable("id") Long id) {
         boolean deleted = orderService.deleteOrder(id);
         if (!deleted) {
@@ -76,4 +77,3 @@ public class AdminOrderController {
 
     }
 }
-

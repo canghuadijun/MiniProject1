@@ -3,46 +3,43 @@ package com.example.MiniProject1.controller;
 import com.example.MiniProject1.models.Order;
 import com.example.MiniProject1.payload.Request.OrderRequest;
 import com.example.MiniProject1.payload.Response.ResponseObject;
-import com.example.MiniProject1.services.impl.CustomerOrderService;
+import com.example.MiniProject1.services.impl.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/customer/order")
-@PreAuthorize("hasRole('CUSTOMER')")
 public class CustomerOrderController {
-    private final CustomerOrderService customerOrderService;
+    private final OrderService orderService;
 
-    public CustomerOrderController(CustomerOrderService customerOrderService) {
-        this.customerOrderService = customerOrderService;
+    public CustomerOrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
-    @GetMapping("/view")
-    public ResponseEntity <List<Order>> getAllOrders() {
-        List<Order> orders = customerOrderService.getAllOrders();
+    @GetMapping("/{customerId}/view")
+    public ResponseEntity<List<Order>> getAllOrdersByCustomer(@PathVariable("customerId") Long customerId) {
+        List<Order> orders = orderService.getAllOrdersByCustomerId(customerId);
         return ResponseEntity.ok(orders);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> getOrderById(@PathVariable("id") Long id) throws Exception {
-        Order order = customerOrderService.getOrderById(id);
+    @GetMapping("/{customerId}/get/{orderId}")
+    public ResponseEntity<ResponseObject> getOrderByIdByCustomer(@PathVariable("customerId") Long customerId, @PathVariable("orderId") Long orderId) {
+        Order order = orderService.getOrderByCustomerId(customerId, orderId);
         if (order == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseObject("fail", "not found", ""));
         }
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseObject("ok", "get order successfully", order));
-
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<ResponseObject> createOrder(@RequestBody OrderRequest orderRequest) {
-        Order order = customerOrderService.createOrder(orderRequest);
-        if(order == null) {
+    @PostMapping("/{customerId}/create")
+    public ResponseEntity<ResponseObject> createOrderByCustomer(@RequestBody OrderRequest orderRequest) {
+        Order order = orderService.createOrderByCustomer(orderRequest);
+        if (order == null) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
                     .body(new ResponseObject("fail", "create order failed", ""));
         }
@@ -50,9 +47,9 @@ public class CustomerOrderController {
                 .body(new ResponseObject("ok", "create successfully", order));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateOrder(@PathVariable("id") Long id, @RequestBody OrderRequest orderRequest) throws Exception {
-        Order order = customerOrderService.updateOrder(id, orderRequest);
+    @PutMapping("/{customerId}/update/{orderId}")
+    public ResponseEntity<?> updateOrderByCustomer(@PathVariable("customerId") Long customerId, @PathVariable("orderId") Long orderId, @RequestBody OrderRequest orderRequest) throws Exception {
+        Order order = orderService.updateOrderByCustomer(customerId, orderId, orderRequest);
         if (order == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseObject("fail", "not found", ""));
@@ -63,13 +60,12 @@ public class CustomerOrderController {
 
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseObject> deleteOrder(@PathVariable("id") Long id) throws Exception {
-        boolean deleted = customerOrderService.deleteOrder(id);
+    @DeleteMapping("/{customerId}/delete/{orderId}")
+    public ResponseEntity<ResponseObject> deleteOrderByCustomer(@PathVariable("customerId") Long customerId, @PathVariable("orderId") Long orderId) throws Exception {
+        boolean deleted = orderService.deleteOrderByCustomer(customerId, orderId);
         if (!deleted) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseObject("fail", "not found", ""));
-
 
         }
         return ResponseEntity.status(HttpStatus.OK)

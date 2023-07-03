@@ -80,19 +80,4 @@ public class AuthService {
         // Lưu user vào cơ sở dữ liệu
         return userRepository.save(user);
     }
-
-    public User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return null; // Không có người đăng nhập hiện tại
-        }
-
-        Object principal = authentication.getPrincipal();
-        if (principal instanceof User) {
-            return (User) principal; // Trả về thông tin người đăng nhập hiện tại
-        }
-
-        return null; // Không tìm thấy thông tin người đăng nhập
-    }
 }

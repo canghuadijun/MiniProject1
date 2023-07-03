@@ -5,10 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByName(String keyword);
     Boolean existsByName(String name);
     // Các phương thức truy vấn tương ứng với thao tác trên bảng Product
+    Optional<Product> findById(Long id);
 }

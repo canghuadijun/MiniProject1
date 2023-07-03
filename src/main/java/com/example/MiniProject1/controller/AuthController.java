@@ -17,10 +17,6 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @GetMapping("/hello")
-    public ResponseEntity<?> testApi() {
-        return ResponseEntity.ok().body("Hê lô");
-    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {

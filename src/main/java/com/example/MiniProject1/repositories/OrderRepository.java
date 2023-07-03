@@ -9,4 +9,7 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     // Các phương thức truy vấn tương ứng với thao tác trên bảng Order
     List<Order> findByCustomerId(Long customerId);
+
+    Order findByCustomerIdAndId(Long customerId, Long orderId);
+    Boolean existsByCustomer(Long customerId);
 }
