@@ -6,11 +6,13 @@ import com.example.MiniProject1.payload.Response.ResponseObject;
 import com.example.MiniProject1.services.impl.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/admin/order")
 public class AdminOrderController {
     private final OrderService orderService;

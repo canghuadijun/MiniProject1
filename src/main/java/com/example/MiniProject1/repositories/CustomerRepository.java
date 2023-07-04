@@ -9,5 +9,6 @@ import java.util.Optional;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     // Các phương thức truy vấn tương ứng với thao tác trên bảng Customer
-    Optional<Customer> findById(Long customerId);
+//    Optional<Customer> findById(Long customerId);
+    Optional<Customer> findByUserId(Long userId);
 }

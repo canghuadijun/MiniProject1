@@ -1,12 +1,15 @@
 package com.example.MiniProject1.services.impl;
 
+import com.example.MiniProject1.models.Customer;
 import com.example.MiniProject1.models.Order;
 import com.example.MiniProject1.payload.Request.OrderRequest;
 import com.example.MiniProject1.repositories.CustomerRepository;
 import com.example.MiniProject1.repositories.OrderRepository;
 import com.example.MiniProject1.repositories.ProductRepository;
+import com.example.MiniProject1.security.jwt.CustomUserDetails;
 import com.example.MiniProject1.services.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -98,6 +101,7 @@ public class OrderService implements IOrderService {
             Order order = new Order();
             order.setOrderDate(orderRequest.getOrderDate());
             order.setProduct(productRepository.findById(orderRequest.getProductId()).orElse(null));
+            order.setCustomer(customerRepository.findById(orderRequest.getCustomerId()).orElse(null));
             return orderRepository.save(order);
         }
         return null;
@@ -105,22 +109,23 @@ public class OrderService implements IOrderService {
 
     public Order updateOrderByCustomer(Long customerId, Long orderId, OrderRequest orderRequest) throws Exception {
         Order order = orderRepository.findById(orderId).orElse(null);
-        if (!orderRepository.existsByCustomer(customerId)) {
+        // kiểm tra người dùng có được phép thao tác trên orderId này không
+        if (!orderRepository.existsByCustomerId(customerId)) {
             throw new Exception("No order founded with customerId");
         }
         order.setOrderDate(orderRequest.getOrderDate());
-        if (productRepository.findById(orderRequest.getProductId()) == null) {
+        if (!productRepository.findById(orderRequest.getProductId()).isPresent()) {
             throw new Exception("ProductId not exists");
         }
         order.setProduct(productRepository.findById(orderRequest.getProductId()).orElse(null));
         if (customerRepository.findById(orderRequest.getCustomerId()) == null) {
-            throw new Exception("CustomerId note exists");
+            throw new Exception("CustomerId not exists");
         }
         return orderRepository.save(order);
     }
 
     public boolean deleteOrderByCustomer(Long customerId, Long orderId) throws Exception {
-        if (!orderRepository.existsByCustomer(customerId)) {
+        if (!orderRepository.existsByCustomerId(customerId)) {
             throw new Exception("No order founded with customerId");
         }
         if (orderRepository.existsById(orderId)) {
@@ -128,5 +133,14 @@ public class OrderService implements IOrderService {
             return true;
         }
         return false;
+    }
+
+    public Long getCustomerIdFromContext(Authentication authentication) throws Exception {
+        if (authentication == null) {
+            throw new Exception("lỗi rồi fix đi");
+        }
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Customer customer = customerRepository.findByUserId(userDetails.getId()).orElse(null);
+        return customer.getId();
     }
 }
