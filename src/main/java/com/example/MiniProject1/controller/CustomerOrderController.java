@@ -23,24 +23,21 @@ public class CustomerOrderController {
     public CustomerOrderController(OrderService orderService, CustomerRepository customerRepository) {
         this.orderService = orderService;
         this.customerRepository = customerRepository;
+
     }
 
 
     @GetMapping("/customer/order/view")
     public ResponseEntity<List<Order>> getAllOrdersByCustomer() throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // Lấy customerId hiện tại từ SecurityContextHolder
-        Long customerId = orderService.getCustomerIdFromContext(authentication);
-        List<Order> orders = orderService.getAllOrdersByCustomerId(customerId);
+        List<Order> orders = orderService.getAllOrdersByCustomerId(authentication);
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/customer/order/get/{orderId}")
-    public ResponseEntity<ResponseObject> getOrderByIdByCustomer( @PathVariable("orderId") Long orderId) throws Exception {
+    public ResponseEntity<ResponseObject> getOrderByIdByCustomer(@PathVariable("orderId") Long orderId) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // Lấy customerId hiện tại từ SecurityContextHolder
-        Long customerId = orderService.getCustomerIdFromContext(authentication);
-        Order order = orderService.getOrderByCustomerId(customerId, orderId);
+        Order order = orderService.getOrderByCustomerId(authentication, orderId);
         if (order == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseObject("fail", "not found", ""));
@@ -63,9 +60,7 @@ public class CustomerOrderController {
     @PutMapping("/customer/order/update/{orderId}")
     public ResponseEntity<?> updateOrderByCustomer(@PathVariable("orderId") Long orderId, @RequestBody OrderRequest orderRequest) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // Lấy thông tin người dùng hiện tại từ SecurityContextHolder
-        Long customerId = orderService.getCustomerIdFromContext(authentication);
-        Order order = orderService.updateOrderByCustomer(customerId, orderId, orderRequest);
+        Order order = orderService.updateOrderByCustomer(authentication, orderId, orderRequest);
         if (order == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseObject("fail", "not found", ""));
@@ -78,9 +73,7 @@ public class CustomerOrderController {
     @DeleteMapping("/customer/order/delete/{orderId}")
     public ResponseEntity<ResponseObject> deleteOrderByCustomer(@PathVariable("orderId") Long orderId) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // Lấy thông tin người dùng hiện tại từ SecurityContextHolder
-        Long customerId = orderService.getCustomerIdFromContext(authentication);
-        boolean deleted = orderService.deleteOrderByCustomer(customerId, orderId);
+        boolean deleted = orderService.deleteOrderByCustomer(authentication, orderId);
         if (!deleted) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseObject("fail", "not found", ""));

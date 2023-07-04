@@ -88,12 +88,12 @@ public class OrderService implements IOrderService {
     /*
         Dịch vụ cho customer với use case order
      */
-    public List<Order> getAllOrdersByCustomerId(Long customerId) {
-        return orderRepository.findByCustomerId(customerId);
+    public List<Order> getAllOrdersByCustomerId(Authentication authentication) throws Exception {
+        return orderRepository.findByCustomerId(getCustomerIdFromContext(authentication));
     }
 
-    public Order getOrderByCustomerId(Long customerId, Long orderId) {
-        return orderRepository.findByCustomerIdAndId(customerId, orderId);
+    public Order getOrderByCustomerId(Authentication authentication, Long orderId) throws Exception {
+        return orderRepository.findByCustomerIdAndId(getCustomerIdFromContext(authentication), orderId);
     }
 
     public Order createOrderByCustomer(OrderRequest orderRequest) {
@@ -107,10 +107,11 @@ public class OrderService implements IOrderService {
         return null;
     }
 
-    public Order updateOrderByCustomer(Long customerId, Long orderId, OrderRequest orderRequest) throws Exception {
+
+    public Order updateOrderByCustomer(Authentication authentication, Long orderId, OrderRequest orderRequest) throws Exception {
         Order order = orderRepository.findById(orderId).orElse(null);
         // kiểm tra người dùng có được phép thao tác trên orderId này không
-        if (!orderRepository.existsByCustomerId(customerId)) {
+        if (!orderRepository.existsByCustomerId(getCustomerIdFromContext(authentication))) {
             throw new Exception("No order founded with customerId");
         }
         order.setOrderDate(orderRequest.getOrderDate());
@@ -124,8 +125,8 @@ public class OrderService implements IOrderService {
         return orderRepository.save(order);
     }
 
-    public boolean deleteOrderByCustomer(Long customerId, Long orderId) throws Exception {
-        if (!orderRepository.existsByCustomerId(customerId)) {
+    public boolean deleteOrderByCustomer(Authentication authentication, Long orderId) throws Exception {
+        if (!orderRepository.existsByCustomerId(getCustomerIdFromContext(authentication))) {
             throw new Exception("No order founded with customerId");
         }
         if (orderRepository.existsById(orderId)) {
