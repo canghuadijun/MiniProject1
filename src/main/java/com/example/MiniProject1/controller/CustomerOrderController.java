@@ -26,8 +26,11 @@ public class CustomerOrderController {
     }
 
 
-    @GetMapping("/customer/{customerId}/order/view")
-    public ResponseEntity<List<Order>> getAllOrdersByCustomer(@PathVariable("customerId") Long customerId) {
+    @GetMapping("/customer/order/view")
+    public ResponseEntity<List<Order>> getAllOrdersByCustomer() throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Lấy customerId hiện tại từ SecurityContextHolder
+        Long customerId = orderService.getCustomerIdFromContext(authentication);
         List<Order> orders = orderService.getAllOrdersByCustomerId(customerId);
         return ResponseEntity.ok(orders);
     }
